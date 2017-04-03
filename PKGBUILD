@@ -1,8 +1,8 @@
 # $Id: PKGBUILD 291970 2017-04-01 08:21:20Z andyrtr $
 # Maintainer: Andreas Radke <andyrtr@archlinux.org>
 
-pkgbase=linux-lts-nvme
-#pkgbase=linux-lts-nvme-custom
+pkgbase=linux-9560
+#pkgbase=linux-9560-custom
 _srcname=linux-4.9
 pkgver=4.9.20
 pkgrel=1
@@ -18,7 +18,7 @@ source=(https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.{xz,sign}
         # pacman hook for initramfs regeneration
         '90-linux.hook'
         # standard config files for mkinitcpio ramdisk
-        linux-lts.preset
+        linux-9560.preset
         change-default-console-loglevel.patch
 	APST.patch
 	pm_qos1.patch
@@ -30,10 +30,10 @@ sha256sums=('029098dcffab74875e086ae970e3828456838da6e0ba22ce3f64ef764f3d7f1a'
             'SKIP'
             'fb856acd9195e7d83ef9971ec7be55eca0d6fdf0fbfbe9a8f3bb04590d44b51f'
             'SKIP'
-            'd577759532f56b0df073cdc0f2aa3975f1325b8a91851050bb678e18ace6700c'
-            '521943d91f3e2a42b9848c429063db2b554e4433366fa8341ab9186a1151d0ca'
+            '304ee1aa10f018562946fe662399509029f3f694ade359a940cca550dde85606'
+            'b407686dc516c07ec43624516522cac17a862200ff017f895229f3a1237b1cd2'
             '834bd254b56ab71d73f59b3221f056c72f559553c04718e350ab2a3e2991afe0'
-            '1f036f7464da54ae510630f0edb69faa115287f86d9f17641197ffda8cfd49e0'
+            'fda3bfeee469ebd640aff940ddecfb2e3136ffcf4b0051f135e2ed4887af9512'
             '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
             '8ba7d5596b65c7705958836ab93ac714dbccdcd7e806be49f667ed427eff3e83'
             '88893fcd9612ddda60133670a83153dc44b4b13a8a05f7a4e2173ffbc6973164'
@@ -108,11 +108,11 @@ build() {
 _package() {
   pkgdesc="The ${pkgbase/linux/Linux} kernel and modules"
   [ "${pkgbase}" = "linux" ] && groups=('base')
-  provides=('linux-lts')
+  provides=('linux-lts=${pkgver}')
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('crda: to set the correct wireless channels of your country')
   backup=("etc/mkinitcpio.d/${pkgbase}.preset")
-  install=linux-lts.install
+  install=linux-9560.install
 
   cd "${srcdir}/${_srcname}"
 
@@ -136,7 +136,7 @@ _package() {
     -i "${startdir}/${install}"
 
   # install mkinitcpio preset file for kernel
-  install -D -m644 "${srcdir}/linux-lts.preset" "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
+  install -D -m644 "${srcdir}/linux-9560.preset" "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
   sed \
     -e "1s|'linux.*'|'${pkgbase}'|" \
     -e "s|ALL_kver=.*|ALL_kver=\"/boot/vmlinuz-${pkgbase}\"|" \
@@ -171,7 +171,7 @@ _package() {
 
 _package-headers() {
   pkgdesc="Header files and scripts for building modules for ${pkgbase/linux/Linux} kernel"
-  provides=('linux-lts-headers')
+  provides=('linux-lts-headers=${pkgver}')
 
   install -dm755 "${pkgdir}/usr/lib/modules/${_kernver}"
 
@@ -298,7 +298,7 @@ _package-headers() {
 
 _package-docs() {
   pkgdesc="Kernel hackers manual - HTML documentation that comes with the ${pkgbase/linux/Linux} kernel"
-  provides=('linux-lts-docs')
+  provides=('linux-lts-docs=${pkgver}')
 
   cd "${srcdir}/${_srcname}"
 
