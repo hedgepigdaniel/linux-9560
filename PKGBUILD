@@ -108,6 +108,7 @@ build() {
 _package() {
   pkgdesc="The ${pkgbase/linux/Linux} kernel and modules"
   [ "${pkgbase}" = "linux" ] && groups=('base')
+  provides=('linux-lts')
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('crda: to set the correct wireless channels of your country')
   backup=("etc/mkinitcpio.d/${pkgbase}.preset")
@@ -170,6 +171,7 @@ _package() {
 
 _package-headers() {
   pkgdesc="Header files and scripts for building modules for ${pkgbase/linux/Linux} kernel"
+  provides=('linux-lts-headers')
 
   install -dm755 "${pkgdir}/usr/lib/modules/${_kernver}"
 
@@ -296,6 +298,7 @@ _package-headers() {
 
 _package-docs() {
   pkgdesc="Kernel hackers manual - HTML documentation that comes with the ${pkgbase/linux/Linux} kernel"
+  provides=('linux-lts-docs')
 
   cd "${srcdir}/${_srcname}"
 
