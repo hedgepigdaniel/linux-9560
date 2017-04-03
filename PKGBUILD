@@ -1,8 +1,8 @@
 # $Id: PKGBUILD 291970 2017-04-01 08:21:20Z andyrtr $
 # Maintainer: Andreas Radke <andyrtr@archlinux.org>
 
-pkgbase=linux-lts
-#pkgbase=linux-lts-custom
+pkgbase=linux-lts-nvme
+#pkgbase=linux-lts-nvme-custom
 _srcname=linux-4.9
 pkgver=4.9.20
 pkgrel=1
@@ -19,7 +19,12 @@ source=(https://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.{xz,sign}
         '90-linux.hook'
         # standard config files for mkinitcpio ramdisk
         linux-lts.preset
-        change-default-console-loglevel.patch)
+        change-default-console-loglevel.patch
+	APST.patch
+	pm_qos1.patch
+	pm_qos2.patch
+	pm_qos3.patch
+	nvme.patch)
 # https://www.kernel.org/pub/linux/kernel/v4.x/sha256sums.asc
 sha256sums=('029098dcffab74875e086ae970e3828456838da6e0ba22ce3f64ef764f3d7f1a'
             'SKIP'
@@ -29,7 +34,12 @@ sha256sums=('029098dcffab74875e086ae970e3828456838da6e0ba22ce3f64ef764f3d7f1a'
             '521943d91f3e2a42b9848c429063db2b554e4433366fa8341ab9186a1151d0ca'
             '834bd254b56ab71d73f59b3221f056c72f559553c04718e350ab2a3e2991afe0'
             '1f036f7464da54ae510630f0edb69faa115287f86d9f17641197ffda8cfd49e0'
-            '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99')
+            '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
+            '8ba7d5596b65c7705958836ab93ac714dbccdcd7e806be49f667ed427eff3e83'
+            '88893fcd9612ddda60133670a83153dc44b4b13a8a05f7a4e2173ffbc6973164'
+            '945de39f2f52c78b4a500ff55c8e062d501cce3b3b739ea14ce76c6c77dc668d'
+            'e5b6308dd489f7000a7d418bfdad32c850cd5d193ce9ca97b83515f3ae815413'
+            '14191cd53057be7de90d5d1abb1e86c4a6022f5d8520f6fd30021a587d5ce565')
 validpgpkeys=('ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds <torvalds@linux-foundation.org>
               '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman (Linux kernel stable release signing key) <greg@kroah.com>
              )
@@ -49,6 +59,13 @@ prepare() {
   # remove this when a Kconfig knob is made available by upstream
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
   patch -p1 -i "${srcdir}/change-default-console-loglevel.patch"
+
+  # Added APST NVME patch here
+  patch -p1 -i "${srcdir}/APST.patch"
+  patch -p1 -i "${srcdir}/pm_qos1.patch"
+  patch -p1 -i "${srcdir}/pm_qos2.patch"
+  patch -p1 -i "${srcdir}/pm_qos3.patch"
+  patch -p1 -i "${srcdir}/nvme.patch"
 
   if [ "${CARCH}" = "x86_64" ]; then
     cat "${srcdir}/config.x86_64" > ./.config
